@@ -1,0 +1,21 @@
+.menu{
+
+	width: 20%;
+
+	background-color: cornflowerblue;
+	border-radius: 5px;
+
+	
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+
+	.shape{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		margin: 5px;
+	}
+}

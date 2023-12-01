@@ -7,6 +7,11 @@ import { BehaviorSubject } from 'rxjs';
 export class BoardService {
 
 	private menuSelection = new BehaviorSubject<any>('');
+	public menuSelection$ = this.menuSelection.asObservable()
 
   constructor() { }
+
+	set menuItem(shape:string){
+		this.menuSelection.next(shape)
+	}
 }

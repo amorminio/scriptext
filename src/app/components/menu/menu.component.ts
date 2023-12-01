@@ -19,12 +19,14 @@ export class MenuComponent implements AfterViewInit{
 	ngAfterViewInit() {
 		this.shapes.forEach((element: ElementRef) => {
 			element.nativeElement.addEventListener('dragstart', (event: any) => {
-				console.log("drag ?");
-				
-				event.dataTransfer.setData('text', 'draggable-element');
+				event.dataTransfer.setData('menuItem', 'draggable-element');
 			});
 
 		});
+	}
+
+	public selectShape(shape:string):void{
+		this._board.menuItem = shape
 	}
 
 }

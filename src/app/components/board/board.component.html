@@ -1,8 +1,8 @@
 <div class="board">
 
 	<svg #board_element class="svg-board" width="500px" height="500px" viewBox="0 0 500 500" >
-		<g *ngFor="let item of shapes">
-			
+		<g *ngFor="let item of shapes" (click)="selectShape(item)" [ngClass]="{selected: item.id === boardSelection.id}">
+			<rect *ngIf="item.type==='rect'" class="rect" [attr.x]="item.x" [attr.y]="item.y" [attr.width]="item.width" [attr.height]="item.height" fill="white" stroke="black" stroke-width="4" />
 		</g>
 	</svg>
 

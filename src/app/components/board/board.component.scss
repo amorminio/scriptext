@@ -5,13 +5,15 @@
 	width: fit-content;
 
 	.svg-board{
+		g{
+			margin:5px;
+			background: blue;
 
-		.rect{
-			margin:17px;
+			&:hover{
+				cursor:move;
+			}
+
 		}
-
-
-		
 	}
 
 	

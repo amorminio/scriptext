@@ -1,20 +1,72 @@
-.board{
-	border: 1px	solid	black;
-	border-radius: 5px;
-	background: rgb(219, 219, 219);
-	width: fit-content;
+.wrapper{
+	display: flex;
+	flex-direction: row;
+	height: 100%;
 
-	.svg-board{
-		g{
-			margin:5px;
-			background: blue;
-
-			&:hover{
-				cursor:move;
+	.menu{
+		width: 20%;
+		max-width: 20%;
+		padding: 10px;
+	}
+		
+	.board{
+		margin: 5px;
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		
+		.canvas{
+			// display: flex;
+			// justify-content: center;
+			// align-items: center;
+			border: 1px	solid	black;
+			border-radius: 5px;
+			background: #FCFCFC;
+		
+			.svg-canvas{
+				.shape{
+					&:hover{
+						cursor:move;
+					}
+		
+					.border-nw-expander:hover{
+						cursor: nw-resize;
+					}
+					.border-n-expander:hover{
+						cursor: n-resize;
+					}
+					.border-ne-expander:hover{
+						cursor: ne-resize;
+					}
+					.border-w-expander:hover{
+						cursor: w-resize;
+					}
+					.border-e-expander:hover{
+						cursor: e-resize;
+					}
+					.border-sw-expander:hover{
+						cursor: sw-resize;
+					}
+					.border-s-expander:hover{
+						cursor: s-resize;
+					}
+					.border-se-expander:hover{
+						cursor: se-resize;
+					}
+		
+					.border{
+						opacity: 0;
+						&.selected{
+							opacity: 1;
+						}
+					}
+		
+				}
 			}
-
 		}
 	}
 
-	
 }
+
+
+

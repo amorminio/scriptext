@@ -20,15 +20,15 @@ export class BoardService {
   constructor() { }
 
 	public addShape(shape:any){
-
 		shape.id = this.idCounter ++
-
 		let shapes = this.shapes.getValue()
 		shapes.push(shape)
 		this.shapes.next(shapes)
-
 		console.log('shapes?',shapes);
-		
+	}
+
+	updateShape(shape:any){
+
 	}
 
 	// Accessors

@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { BoardComponent } from './components/board/board.component';
-import { MenuComponent } from './components/menu/menu.component';
+import { ShapeSelectorComponent } from './components/menu/shape-selector.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet,BoardComponent,MenuComponent],
+  imports: [CommonModule, RouterOutlet,BoardComponent,ShapeSelectorComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

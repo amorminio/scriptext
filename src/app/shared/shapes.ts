@@ -44,12 +44,11 @@ export const SHAPES = {
 		menuY:5
 	},
 
-	// <ellipse  cx="50%" cy="50%" rx="15" ry="15" fill="#6bbf59" stroke="black" stroke-width="1"
 	start_point :{
 		
-		type:'circle',
-		height:50,
-		width:50,
+		type:'start_point',
+		height:'55',
+		width:'40',
 		rx:15,
 		ry:15,
 		cx:'50%',
@@ -64,7 +63,7 @@ export const SHAPES = {
 	},
 
 	end_point :{
-		type:'circle',
+		type:'end_point',
 		height:50,
 		width:50,
 		rx:15,
@@ -73,23 +72,24 @@ export const SHAPES = {
 		cy:'50%',
 		fill: '#ff5252',
 		stroke: '#c90404',
-		stroke_width: 2,
+		stroke_width: 1,
 		fill_opacity: 0.2,
 		stroke_opacity: 0.8,
 		menuX:5,
 		menuY:5
 	},
-
-	//TODO - SETUP CONSTANTS FOR OTHER SHAPES
 	
-	diamond :{
-		name:'node',
-		type:'diamond',
-		family:'flowchart',
+	decision_diamond :{
+		type:'decision_diamond',
 		height:50,
 		width:50,
 		menuX:5,
-		menuY:5
+		menuY:5,
+		fill: '#FFF2CC',
+		stroke: '#D6B656',
+		stroke_width: 2,
+		fill_opacity: 0.2,
+		stroke_opacity: 0.8
 	}
 
 }
@@ -102,7 +102,7 @@ export const COLORS = {
 export const MENU_FLOWCHART_SHAPES = [
 	SHAPES.start_point,
 	SHAPES.end_point,
-	SHAPES.diamond,
+	SHAPES.decision_diamond,
 	SHAPES.rectangle,
 	SHAPES.round_rectangle
 ]

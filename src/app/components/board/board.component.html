@@ -11,7 +11,10 @@
 					(click)="selectShape(item)" (mousedown)="startDrag($event,item)" (mouseenter)="selectShape(item)">
 					<!-- Shapes -->
 					<rect *ngIf="item.type ==='rect'" 
-								[attr.x]="item.x" [attr.y]="item.y"
+								[attr.x]="item.x" 
+								[attr.y]="item.y"
+								[attr.rx]="item.rx" 
+								[attr.ry]="item.ry"
 								[attr.width]="item.width"
 								[attr.height]="item.height"
 								[attr.fill]="item.fill"
@@ -19,12 +22,12 @@
 								[attr.stroke]="item.stroke"
 								[attr.stroke-width]=item.stroke_width />
 					
-					<path *ngIf="item.type ==='diamond'"
+					<path *ngIf="item.type ==='decision_diamond'"
 								[attr.d]="item.coordinates"
-								fill="white"
-								stroke="black"
+								[attr.fill]="item.fill"								
+								[attr.stroke]="item.stroke"								
 								[attr.fill-opacity]="item.fill_opacity"
-								stroke-width="2"/>
+								[attr.stroke-width]="item.stroke_width"/>
 					
 					<circle *ngIf="item.type ==='circle'"
 									[attr.cx]="item.x"
@@ -36,7 +39,14 @@
 									[attr.stroke-width]=item.stroke_width />
 
 					<!-- Selection Tools -->
+					<!-- TODO - Every shape must have a unique border conector layer-->
 					<g class="border" [ngClass]="{selected: item.id === boardSelection.id}" >
+					
+					</g>
+
+
+					
+						<g class="border" [ngClass]="{selected: item.id === boardSelection.id}" >
 						<rect  class="rect" 
 									[attr.x]="item.selection.x"
 									[attr.y]="item.selection.y"

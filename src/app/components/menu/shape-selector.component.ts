@@ -32,9 +32,9 @@ export class ShapeSelectorComponent implements AfterViewInit{
 		});
 	}
 
-	public selectShape(shape:string,type:string):void{
-		this._board.menuItem = shape
-		this.selectedItem = type
+	public selectShape(shape:any):void{
+		this._board.menuItem = shape.type
+		this.selectedItem = shape.type
 	}
 
 }

@@ -60,6 +60,16 @@
 							opacity: 1;
 						}
 					}
+
+					.connector{
+						opacity: 0;
+						&:hover{
+							cursor: pointer;
+						}
+						&.selected{
+							opacity: 1;
+						}
+					}
 		
 				}
 			}

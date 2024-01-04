@@ -38,27 +38,55 @@
 									[attr.fill-opacity]="item.fill_opacity"
 									[attr.stroke-width]=item.stroke_width />
 
-					<!-- Selection Tools -->
+
 					<!-- TODO - Every shape must have a unique border conector layer-->
-					<g class="border" [ngClass]="{selected: item.id === boardSelection.id}" >
-					
+					<g class="connector" *ngIf="item.type === 'circle'" [ngClass]="{selected: item.id === boardSelection.id}" >
+						<circle #connector
+									[attr.cx]="item.x"
+									[attr.cy]="item.y -item.r"
+									[attr.r]="3"
+									[attr.fill]="item.fill"
+									[attr.stroke-width]=item.stroke_width
+									(mousedown)="drawLine(item,$event)"
+									 />					
+						<circle #connector
+									[attr.cx]="item.x +item.r"
+									[attr.cy]="item.y"
+									[attr.r]="3"
+									[attr.fill]="item.fill"
+									[attr.stroke-width]=item.stroke_width
+									/>					
+						<circle #connector
+									[attr.cx]="item.x"
+									[attr.cy]="item.y + item.r"
+									[attr.r]="3"
+									[attr.fill]="item.fill"
+									[attr.stroke-width]=item.stroke_width
+									/>					
+						<circle #connector
+									[attr.cx]="item.x -item.r"
+									[attr.cy]="item.y"
+									[attr.r]="3"
+									[attr.fill]="item.fill"
+									[attr.stroke-width]=item.stroke_width
+									 />					
 					</g>
 
 
-					
-						<g class="border" [ngClass]="{selected: item.id === boardSelection.id}" >
-						<rect  class="rect" 
-									[attr.x]="item.selection.x"
-									[attr.y]="item.selection.y"
-									[attr.width]="item.selection.width"
-									[attr.height]="item.selection.height"
-									[attr.fill]="item.selection.fill"
-									[attr.fill-opacity]="item.selection.fill_opacity"
-									[attr.stroke]="item.selection.stroke"
-									[attr.stroke-opacity]="item.selection.stroke_opacity"
-									[attr.stroke-width]="item.selection.stroke_width"
-									stroke-dasharray="5,5"/>
-						
+					<!-- Selection Tools -->					
+					<g class="border" *ngIf="false" [ngClass]="{selected: item.id === boardSelection.id}" >
+							<rect  class="rect" 
+										[attr.x]="item.selection.x"
+										[attr.y]="item.selection.y"
+										[attr.width]="item.selection.width"
+										[attr.height]="item.selection.height"
+										[attr.fill]="item.selection.fill"
+										[attr.fill-opacity]="item.selection.fill_opacity"
+										[attr.stroke]="item.selection.stroke"
+										[attr.stroke-opacity]="item.selection.stroke_opacity"
+										[attr.stroke-width]="item.selection.stroke_width"
+										stroke-dasharray="5,5"/>
+							
 							<!-- Selection border circles -->
 							<circle #border_expander
 											class="border-nw-expander"

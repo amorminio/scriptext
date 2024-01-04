@@ -23,6 +23,9 @@ export class BoardComponent implements OnInit {
 	boardHeight: number = 500
 	boardWidth: number = 500
 	
+	lineDrawing:boolean = false
+	
+	
 
 	constructor(private _board: BoardService) {
 
@@ -49,6 +52,7 @@ export class BoardComponent implements OnInit {
 
 		this.board.nativeElement.addEventListener('mouseup', (event: MouseEvent) => {
 			event.preventDefault();
+			this.lineDrawing = false
 			this.enddrag(event)
 		})
 
@@ -72,14 +76,12 @@ export class BoardComponent implements OnInit {
 	}
 
 	startDrag(event:MouseEvent,shape:any){
-		console.log('StartDrag ?')
 		this.dragSelection = shape
 	}
 
 	drag(event:MouseEvent){
-		if(this.dragSelection){
+		if(this.dragSelection && !this.lineDrawing){
 			event.preventDefault()
-
 			if(this.dragSelection.type === 'rect'){
 				this.dragSelection.x = event.offsetX - this.dragSelection.width/2
 				this.dragSelection.y = event.offsetY - this.dragSelection.height/2
@@ -177,8 +179,6 @@ export class BoardComponent implements OnInit {
 	}
 
 	drawCircle(event: MouseEvent,type:string) {
-		console.log('tipo ?' ,type);
-
 		let shapeBorder = {
 			type: 'rect',
 			x: event.offsetX - 20,
@@ -270,6 +270,15 @@ export class BoardComponent implements OnInit {
 		if(!this.dragSelection)
 		this._board.boardItem = shape
 	}
+
+	drawLine(startShape:any,event:MouseEvent){
+		this.lineDrawing = true
+		console.log(this.lineDrawing);
+
+		// TODO - CONNECTIONS LOGIC
+		
+	}
+
 	
 
 }

@@ -18,10 +18,7 @@ export class ShapeSelectorComponent implements AfterViewInit{
 	selectedItem!:string
 
 	constructor(private _board:BoardService){
-
 		this.flowchart_shapes = MENU_FLOWCHART_SHAPES
-		console.log(this.flowchart_shapes);
-		
 	}
 
 	ngAfterViewInit() {

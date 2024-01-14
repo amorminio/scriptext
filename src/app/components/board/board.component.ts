@@ -20,10 +20,12 @@ export class BoardComponent implements OnInit {
 	boardSelection: any
 	dragSelection: any
 	shapes: Array<any> = []
+	lines: Array<any> = []
 	boardHeight: number = 500
 	boardWidth: number = 500
 	
 	lineDrawing:boolean = false
+	new_line:any={x1:0,	y1:0,	x2:0,	y2:0,	stroke:'black'}
 	
 	
 
@@ -48,6 +50,10 @@ export class BoardComponent implements OnInit {
 		this.board.nativeElement.addEventListener('mousemove', (event: MouseEvent) => {
       event.preventDefault();
 			this.drag(event)
+			if(this.lineDrawing){
+				this.activeLineDraw(event)
+			}
+			
     })
 
 		this.board.nativeElement.addEventListener('mouseup', (event: MouseEvent) => {
@@ -87,13 +93,33 @@ export class BoardComponent implements OnInit {
 				this.dragSelection.y = event.offsetY - this.dragSelection.height/2
 				this.dragSelection.selection.x = (event.offsetX - this.dragSelection.width/2) - SHAPES.rectangle_selected_border.margin
 				this.dragSelection.selection.y = (event.offsetY - this.dragSelection.height/2) - SHAPES.rectangle_selected_border.margin
+				
+				// Move Connectors together
+				this.dragSelection.connectors.a.cx = event.offsetX
+				this.dragSelection.connectors.a.cy = event.offsetY - this.dragSelection.height/2
+				this.dragSelection.connectors.b.cx = event.offsetX + this.dragSelection.width/2
+				this.dragSelection.connectors.b.cy = event.offsetY
+				this.dragSelection.connectors.c.cx = event.offsetX
+				this.dragSelection.connectors.c.cy = event.offsetY + this.dragSelection.height/2
+				this.dragSelection.connectors.d.cx = event.offsetX - this.dragSelection.width/2
+				this.dragSelection.connectors.d.cy = event.offsetY 
 			}
 
 			else if(this.dragSelection.type === 'circle'){
-				this.dragSelection.x = event.offsetX 
-				this.dragSelection.y = event.offsetY
+				this.dragSelection.cx = event.offsetX 
+				this.dragSelection.cy = event.offsetY
 				this.dragSelection.selection.x = event.offsetX - 20
 				this.dragSelection.selection.y = event.offsetY - 20
+
+				// Move Connectors together
+				this.dragSelection.connectors.a.cx = event.offsetX
+				this.dragSelection.connectors.a.cy = event.offsetY - this.dragSelection.r
+				this.dragSelection.connectors.b.cx = event.offsetX + this.dragSelection.r
+				this.dragSelection.connectors.b.cy = event.offsetY
+				this.dragSelection.connectors.c.cx = event.offsetX
+				this.dragSelection.connectors.c.cy = event.offsetY + this.dragSelection.r
+				this.dragSelection.connectors.d.cx = event.offsetX - this.dragSelection.r
+				this.dragSelection.connectors.d.cy = event.offsetY 
 			}
 
 			else if(this.boardSelection.type === 'decision_diamond'){
@@ -102,6 +128,16 @@ export class BoardComponent implements OnInit {
 				this.dragSelection.selection.x = event.offsetX - this.dragSelection.radius -10
 				this.dragSelection.selection.y = event.offsetY - this.dragSelection.radius -10
 				this.dragSelection.coordinates =  `M ${event.offsetX} ${event.offsetY - this.dragSelection.radius} L ${event.offsetX + this.dragSelection.radius} ${event.offsetY } L ${event.offsetX} ${event.offsetY  + this.dragSelection.radius} L ${event.offsetX - this.dragSelection.radius} ${event.offsetY } Z `
+
+				// Move Connectors together
+				this.dragSelection.connectors.a.cx = event.offsetX
+				this.dragSelection.connectors.a.cy = event.offsetY - this.dragSelection.r
+				this.dragSelection.connectors.b.cx = event.offsetX + this.dragSelection.r
+				this.dragSelection.connectors.b.cy = event.offsetY
+				this.dragSelection.connectors.c.cx = event.offsetX
+				this.dragSelection.connectors.c.cy = event.offsetY + this.dragSelection.r
+				this.dragSelection.connectors.d.cx = event.offsetX - this.dragSelection.r
+				this.dragSelection.connectors.d.cy = event.offsetY 
 			}
 		}
 	}
@@ -153,6 +189,32 @@ export class BoardComponent implements OnInit {
 			centerY:event.offsetY
 		}
 
+		let connectors = {
+			fill:SHAPES.connector.fill,
+			stroke_width:SHAPES.rectangle.stroke_width,
+			
+			a:{
+					cx:event.offsetX ,
+					cy:event.offsetY - SHAPES.rectangle.height/2,
+					r:SHAPES.connector.radius
+				},
+			b:{
+					cx:event.offsetX + SHAPES.rectangle.width/2,
+					cy:event.offsetY,
+					r:SHAPES.circle.connector_radius
+				},
+			c:{
+					cx:event.offsetX,
+					cy:event.offsetY + SHAPES.rectangle.height/2,
+					r:SHAPES.circle.connector_radius
+				},
+			d:{
+					cx:event.offsetX - SHAPES.rectangle.width/2,
+					cy:event.offsetY, 
+					r:SHAPES.circle.connector_radius
+				}
+		}
+
 		let shape = {
 			type: 'rect',
 			x: event.offsetX - SHAPES.rectangle.width / 2,
@@ -165,6 +227,7 @@ export class BoardComponent implements OnInit {
 			centerX:event.offsetX,
 			centerY:event.offsetY,
 			selection: shapeBorder,
+			connectors,
 			rx:0,
 			ry:0
 		}
@@ -179,6 +242,9 @@ export class BoardComponent implements OnInit {
 	}
 
 	drawCircle(event: MouseEvent,type:string) {
+
+		
+		
 		let shapeBorder = {
 			type: 'rect',
 			x: event.offsetX - 20,
@@ -196,21 +262,45 @@ export class BoardComponent implements OnInit {
 			},
 		}
 
+		let connectors = {
+			fill:SHAPES.circle.fill,
+			stroke_width:SHAPES.circle.stroke_width,
+			a:{
+					cx:event.offsetX,
+					cy:event.offsetY - SHAPES.circle.r,
+					r:SHAPES.circle.connector_radius
+				},
+			b:{
+					cx:event.offsetX + SHAPES.circle.r,
+					cy:event.offsetY,
+					r:SHAPES.circle.connector_radius
+				},
+			c:{
+					cx:event.offsetX,
+					cy:event.offsetY + SHAPES.circle.r,
+					r:SHAPES.circle.connector_radius
+				},
+			d:{
+					cx:event.offsetX- SHAPES.circle.r,
+					cy:event.offsetY, 
+					r:SHAPES.circle.connector_radius
+				}
+		}
+
 		let shape = {
 			type: 'circle',
-			x: event.offsetX,
-			y: event.offsetY,
-			r: 15,
-			fill: '#5EB1BF',
-			stroke: 'black',
-			stroke_width: 1,
-			fill_opacity: 0.2,
-			center: {
-				x: event.offsetX,
-				y: event.offsetY
-			},
-			selection: shapeBorder
+			cx: event.offsetX,
+			cy: event.offsetY,
+			r: SHAPES.circle.r,
+			fill: SHAPES.circle.fill,
+			stroke: SHAPES.circle.stroke,
+			stroke_width: SHAPES.circle.stroke_width,
+			fill_opacity: SHAPES.circle.fill_opacity,
+			selection: shapeBorder,
+			connectors
 		}
+
+		
 
 		if(this.menuSelection==='start_point'){
 			shape.fill= SHAPES.start_point.fill,
@@ -244,12 +334,39 @@ export class BoardComponent implements OnInit {
 			}
 		}
 
+		let connectors = {
+			fill:SHAPES.connector.fill,
+			stroke_width:SHAPES.rectangle.stroke_width,
+			
+			a:{
+					cx:event.offsetX ,
+					cy:event.offsetY - radius,
+					r:SHAPES.connector.radius
+				},
+			b:{
+					cx:event.offsetX + radius,
+					cy:event.offsetY,
+					r:SHAPES.circle.connector_radius
+				},
+			c:{
+					cx:event.offsetX,
+					cy:event.offsetY + radius,
+					r:SHAPES.circle.connector_radius
+				},
+			d:{
+					cx:event.offsetX - radius,
+					cy:event.offsetY, 
+					r:SHAPES.circle.connector_radius
+				}
+		}
+
+		
 		let shape = {
 			coordinates: `M ${event.offsetX} ${event.offsetY - radius} L ${event.offsetX + radius} ${event.offsetY } L ${event.offsetX} ${event.offsetY  + radius} L ${event.offsetX - radius} ${event.offsetY } Z `,
 			type: 'decision_diamond',
 			x: event.offsetX,
 			y: event.offsetY,
-			radius:20,
+			radius:radius,
 			width: 60,
 			height: 60,
 			fill: SHAPES.decision_diamond.fill,
@@ -259,7 +376,8 @@ export class BoardComponent implements OnInit {
 				x: event.offsetX,
 				y: event.offsetY
 			},
-			selection: shapeBorder
+			selection: shapeBorder,
+			connectors
 		}
 
 		this._board.addShape(shape)
@@ -271,12 +389,35 @@ export class BoardComponent implements OnInit {
 		this._board.boardItem = shape
 	}
 
-	drawLine(startShape:any,event:MouseEvent){
+	startLineDraw(startShape:any,event:MouseEvent){
+		debugger
 		this.lineDrawing = true
-		console.log(this.lineDrawing);
 
-		// TODO - CONNECTIONS LOGIC
+		this.new_line.x1 = event.offsetX
+		this.new_line.y1 = event.offsetY
+		this.new_line.x2 = event.offsetX
+		this.new_line.y2 = event.offsetY
 		
+	}
+
+	stopLineDraw(targetShape:any,event:MouseEvent){
+		if(this.lineDrawing){
+			let line = {
+				x1:this.new_line.x1,
+				y1:this.new_line.y1,
+				x2:this.new_line.x2,
+				y2:this.new_line.y2
+			}
+			this.lines.push(line)
+		}
+		this.lineDrawing = false
+		this.new_line = {x1:0,	y1:0,	x2:0,	y2:0,	stroke:'black'}
+
+	}
+
+	activeLineDraw(event:MouseEvent){
+		this.new_line.x2 = event.offsetX
+		this.new_line.y2 = event.offsetY
 	}
 
 	

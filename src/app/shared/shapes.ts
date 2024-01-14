@@ -11,7 +11,6 @@ export const SHAPES = {
 
 		menuX:0,
 		menuY:0
-
 	},
 
 	round_rectangle :{
@@ -44,8 +43,7 @@ export const SHAPES = {
 		menuY:5
 	},
 
-	start_point :{
-		
+	start_point : {
 		type:'start_point',
 		height:'55',
 		width:'40',
@@ -59,7 +57,7 @@ export const SHAPES = {
 		fill_opacity: 0.2,
 		stroke_opacity: 0.8,
 		menuX:5,
-		menuY:5
+		menuY:5		
 	},
 
 	end_point :{
@@ -90,7 +88,26 @@ export const SHAPES = {
 		stroke_width: 2,
 		fill_opacity: 0.2,
 		stroke_opacity: 0.8
+	},
+
+	circle:{
+		r:15,
+		fill: '#5EB1BF',
+		stroke: 'black',
+		stroke_width: 1,
+		fill_opacity: 0.2,
+		
+		connector_radius:3,
+		connector_fill:'#6bbf59',
+		connector_stroke_width:2
+	},
+
+	connector:{
+		radius:3,
+		fill:'#000'
 	}
+
+
 
 }
 

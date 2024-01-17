@@ -16,15 +16,24 @@ export class BoardComponent implements OnInit {
 	@ViewChild('board_element', { static: true }) board!: ElementRef;
 	@ViewChildren('border_expander') borderExpander!: QueryList<ElementRef>;
 
-	menuSelection: any
-	boardSelection: any
-	dragSelection: any
-	shapes: Array<any> = []
-	lines: Array<any> = []
+	// Board
 	boardHeight: number = 500
 	boardWidth: number = 500
 	
+	shapes: Array<any> = []
+	lines: Array<any> = []
+
+	menuSelection: any
+	boardSelection: any
+	dragSelection: any
+	
+	// Line Drawing
 	lineDrawing:boolean = false
+	
+	startConnector:any 
+	endShape:any 
+	endConnector:any 
+
 	new_line:any={x1:0,	y1:0,	x2:0,	y2:0,	stroke:'black'}
 	
 	
@@ -131,12 +140,12 @@ export class BoardComponent implements OnInit {
 
 				// Move Connectors together
 				this.dragSelection.connectors.a.cx = event.offsetX
-				this.dragSelection.connectors.a.cy = event.offsetY - this.dragSelection.r
-				this.dragSelection.connectors.b.cx = event.offsetX + this.dragSelection.r
+				this.dragSelection.connectors.a.cy = event.offsetY - this.dragSelection.radius
+				this.dragSelection.connectors.b.cx = event.offsetX + this.dragSelection.radius
 				this.dragSelection.connectors.b.cy = event.offsetY
 				this.dragSelection.connectors.c.cx = event.offsetX
-				this.dragSelection.connectors.c.cy = event.offsetY + this.dragSelection.r
-				this.dragSelection.connectors.d.cx = event.offsetX - this.dragSelection.r
+				this.dragSelection.connectors.c.cy = event.offsetY + this.dragSelection.radius
+				this.dragSelection.connectors.d.cx = event.offsetX - this.dragSelection.radius
 				this.dragSelection.connectors.d.cy = event.offsetY 
 			}
 		}
@@ -268,22 +277,26 @@ export class BoardComponent implements OnInit {
 			a:{
 					cx:event.offsetX,
 					cy:event.offsetY - SHAPES.circle.r,
-					r:SHAPES.circle.connector_radius
+					r:SHAPES.circle.connector_radius,
+					targets:[]
 				},
 			b:{
 					cx:event.offsetX + SHAPES.circle.r,
 					cy:event.offsetY,
-					r:SHAPES.circle.connector_radius
+					r:SHAPES.circle.connector_radius,
+					targets:[]
 				},
 			c:{
 					cx:event.offsetX,
 					cy:event.offsetY + SHAPES.circle.r,
-					r:SHAPES.circle.connector_radius
+					r:SHAPES.circle.connector_radius,
+					targets:[]
 				},
 			d:{
 					cx:event.offsetX- SHAPES.circle.r,
 					cy:event.offsetY, 
-					r:SHAPES.circle.connector_radius
+					r:SHAPES.circle.connector_radius,
+					targets:[]
 				}
 		}
 
@@ -389,9 +402,10 @@ export class BoardComponent implements OnInit {
 		this._board.boardItem = shape
 	}
 
-	startLineDraw(startShape:any,event:MouseEvent){
-		debugger
+	startLineDraw(sourceShape:any,connector:any,event:MouseEvent){
 		this.lineDrawing = true
+
+		this.startConnector = connector
 
 		this.new_line.x1 = event.offsetX
 		this.new_line.y1 = event.offsetY
@@ -400,17 +414,19 @@ export class BoardComponent implements OnInit {
 		
 	}
 
-	stopLineDraw(targetShape:any,event:MouseEvent){
+	stopLineDraw(targetShape:any,connector:any){
 		if(this.lineDrawing){
 			let line = {
-				x1:this.new_line.x1,
-				y1:this.new_line.y1,
-				x2:this.new_line.x2,
-				y2:this.new_line.y2
+				startConnector: this.startConnector,
+				endConnector:connector,
 			}
+
 			this.lines.push(line)
 		}
+		
 		this.lineDrawing = false
+		this.startConnector = null
+
 		this.new_line = {x1:0,	y1:0,	x2:0,	y2:0,	stroke:'black'}
 
 	}

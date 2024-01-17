@@ -6,6 +6,27 @@
 	<div class="board">
 		<div class="canvas">
 			<svg #board_element width="500" height="500" class="svg-canvas" viewBox="0 0 500 500" >
+
+				<!-- ? Active Line Draw -->
+				<g class='connector' *ngIf="lineDrawing">
+					<line
+						[attr.x1]="new_line.x1"
+						[attr.y1]="new_line.y1"
+						[attr.x2]="new_line.x2"
+						[attr.y2]="new_line.y2"
+						stroke="black"
+					/>
+				</g>
+
+				<g class='connector' *ngFor="let line of lines">
+					<line
+						[attr.x1]="line.startConnector.cx"
+						[attr.y1]="line.startConnector.cy"
+						[attr.x2]="line.endConnector.cx"
+						[attr.y2]="line.endConnector.cy"
+						stroke="black"
+					/>
+				</g>
 				
 				<g class='shape' *ngFor="let item of shapes" 
 					(click)="selectShape(item)" (mousedown)="startDrag($event,item)" (mouseenter)="selectShape(item)">
@@ -40,15 +61,15 @@
 
 
 					<!-- ? Rect Connectors -->
-					<g class="connector" *ngIf="item.type === 'rect'" [ngClass]="{selected: item.id === boardSelection.id}" >
+					<g class="connector" *ngIf="item.type === 'rect'" [ngClass]="{selected: item.id === boardSelection.id || lineDrawing}" >
 						<circle #connector
 									[attr.cx]="item.connectors.a.cx"
 									[attr.cy]="item.connectors.a.cy"
 									[attr.r]="item.connectors.a.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.a,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.a)"
 									 />	
 						<circle #connector
 									[attr.cx]="item.connectors.b.cx"
@@ -56,8 +77,8 @@
 									[attr.r]="item.connectors.b.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.b,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.b)"
 									 />	
 						<circle #connector
 									[attr.cx]="item.connectors.c.cx"
@@ -65,8 +86,8 @@
 									[attr.r]="item.connectors.c.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.c,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.c)"
 									 />	
 						<circle #connector
 									[attr.cx]="item.connectors.d.cx"
@@ -74,20 +95,20 @@
 									[attr.r]="item.connectors.d.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.d,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.d)"
 									 />	
 					</g>
 					<!-- ? Circle Connectors -->
-					<g class="connector" *ngIf="item.type === 'circle'" [ngClass]="{selected: item.id === boardSelection.id}" >
+					<g class="connector" *ngIf="item.type === 'circle'" [ngClass]="{selected: item.id === boardSelection.id || lineDrawing}" >
 						<circle #connector
 									[attr.cx]="item.connectors.a.cx"
 									[attr.cy]="item.connectors.a.cy"
 									[attr.r]="item.connectors.a.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.a,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.a)"
 									 />	
 
 						<circle #connector
@@ -96,8 +117,8 @@
 									[attr.r]="item.connectors.b.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.b,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.b)"
 									 />					
 				
 						<circle #connector
@@ -106,8 +127,8 @@
 									[attr.r]="item.connectors.c.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.c,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.c)"
 									 />					
 						<circle #connector
 									[attr.cx]="item.connectors.d.cx"
@@ -115,23 +136,23 @@
 									[attr.r]="item.connectors.d.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.d,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.d)"
 									 />					
 				
 								
 					</g>
 
 					<!-- ? Diamond Connectors -->
-					<g class="connector" *ngIf="item.type === 'decision_diamond'" [ngClass]="{selected: item.id === boardSelection.id}" >
+					<g class="connector" *ngIf="item.type === 'decision_diamond'" [ngClass]="{selected: item.id === boardSelection.id || lineDrawing}" >
 						<circle #connector
 									[attr.cx]="item.connectors.a.cx"
 									[attr.cy]="item.connectors.a.cy"
 									[attr.r]="item.connectors.a.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.a,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.a)"
 									 />	
 						<circle #connector
 									[attr.cx]="item.connectors.b.cx"
@@ -139,8 +160,8 @@
 									[attr.r]="item.connectors.b.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.b,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.b)"
 									 />	
 						<circle #connector
 									[attr.cx]="item.connectors.c.cx"
@@ -148,8 +169,8 @@
 									[attr.r]="item.connectors.c.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.c,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.c)"
 									 />	
 						<circle #connector
 									[attr.cx]="item.connectors.d.cx"
@@ -157,8 +178,8 @@
 									[attr.r]="item.connectors.d.r"
 									[attr.fill]="item.connectors.fill"
 									[attr.stroke-width]=item.connectors.stroke_width
-									(mousedown)="startLineDraw(item,$event)"
-									(mouseup)="stopLineDraw(item,$event)"
+									(mousedown)="startLineDraw(item,item.connectors.d,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.d)"
 									 />	
 					</g>
 
@@ -250,26 +271,7 @@
 					</g>
 				</g>
 
-				<!-- ? Active Line Draw -->
-				<g class='connector' *ngIf="lineDrawing">
-					<line
-						[attr.x1]="new_line.x1"
-						[attr.y1]="new_line.y1"
-						[attr.x2]="new_line.x2"
-						[attr.y2]="new_line.y2"
-						stroke="black"
-					/>
-				</g>
-
-				<g class='connector' *ngFor="let line of lines">
-					<line
-						[attr.x1]="line.x1"
-						[attr.y1]="line.y1"
-						[attr.x2]="line.x2"
-						[attr.y2]="line.y2"
-						stroke="black"
-					/>
-				</g>
+				
 			</svg>
 		</div>
 	</div>

@@ -15,16 +15,33 @@ export class BoardService {
 	private shapes = new BehaviorSubject<any>([]);
 	public shapes$ = this.shapes.asObservable()
 
+	private lines = new BehaviorSubject<any>([]);
+	public lines$ = this.lines.asObservable()
+
+	
+
 	private idCounter:number = 0
 
   constructor() { }
 
 	public addShape(shape:any){
 		shape.id = this.idCounter ++
+		shape.connectors.a.id = shape.id + 'A'
+		shape.connectors.b.id = shape.id + 'B'
+		shape.connectors.c.id = shape.id + 'C'
+		shape.connectors.d.id = shape.id + 'D'
+
 		let shapes = this.shapes.getValue()
 		shapes.push(shape)
 		this.shapes.next(shapes)
-		console.log('shapes?',shapes);
+	}
+	
+	public addLine(line:any){
+		line.id = this.idCounter ++
+
+		let lines = this.shapes.getValue()
+		lines.push(line)
+		this.shapes.next(lines)
 	}
 
 	updateShape(shape:any){

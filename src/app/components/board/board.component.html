@@ -6,6 +6,27 @@
 	<div class="board">
 		<div class="canvas">
 			<svg #board_element width="500" height="500" class="svg-canvas" viewBox="0 0 500 500" >
+
+				<!-- ? Active Line Draw -->
+				<g class='connector' *ngIf="lineDrawing">
+					<line
+						[attr.x1]="new_line.x1"
+						[attr.y1]="new_line.y1"
+						[attr.x2]="new_line.x2"
+						[attr.y2]="new_line.y2"
+						stroke="black"
+					/>
+				</g>
+
+				<g class='connector' *ngFor="let line of lines">
+					<line
+						[attr.x1]="line.startConnector.cx"
+						[attr.y1]="line.startConnector.cy"
+						[attr.x2]="line.endConnector.cx"
+						[attr.y2]="line.endConnector.cy"
+						stroke="black"
+					/>
+				</g>
 				
 				<g class='shape' *ngFor="let item of shapes" 
 					(click)="selectShape(item)" (mousedown)="startDrag($event,item)" (mouseenter)="selectShape(item)">
@@ -30,35 +51,153 @@
 								[attr.stroke-width]="item.stroke_width"/>
 					
 					<circle *ngIf="item.type ==='circle'"
-									[attr.cx]="item.x"
-									[attr.cy]="item.y"
+									[attr.cx]="item.cx"
+									[attr.cy]="item.cy"
 									[attr.r]="item.r"
 									[attr.fill]="item.fill"
 									[attr.stroke]="item.stroke"
 									[attr.fill-opacity]="item.fill_opacity"
 									[attr.stroke-width]=item.stroke_width />
 
-					<!-- Selection Tools -->
-					<!-- TODO - Every shape must have a unique border conector layer-->
-					<g class="border" [ngClass]="{selected: item.id === boardSelection.id}" >
-					
+
+					<!-- ? Rect Connectors -->
+					<g class="connector" *ngIf="item.type === 'rect'" [ngClass]="{selected: item.id === boardSelection.id || lineDrawing}" >
+						<circle #connector
+									[attr.cx]="item.connectors.a.cx"
+									[attr.cy]="item.connectors.a.cy"
+									[attr.r]="item.connectors.a.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.a,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.a)"
+									 />	
+						<circle #connector
+									[attr.cx]="item.connectors.b.cx"
+									[attr.cy]="item.connectors.b.cy"
+									[attr.r]="item.connectors.b.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.b,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.b)"
+									 />	
+						<circle #connector
+									[attr.cx]="item.connectors.c.cx"
+									[attr.cy]="item.connectors.c.cy"
+									[attr.r]="item.connectors.c.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.c,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.c)"
+									 />	
+						<circle #connector
+									[attr.cx]="item.connectors.d.cx"
+									[attr.cy]="item.connectors.d.cy"
+									[attr.r]="item.connectors.d.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.d,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.d)"
+									 />	
+					</g>
+					<!-- ? Circle Connectors -->
+					<g class="connector" *ngIf="item.type === 'circle'" [ngClass]="{selected: item.id === boardSelection.id || lineDrawing}" >
+						<circle #connector
+									[attr.cx]="item.connectors.a.cx"
+									[attr.cy]="item.connectors.a.cy"
+									[attr.r]="item.connectors.a.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.a,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.a)"
+									 />	
+
+						<circle #connector
+									[attr.cx]="item.connectors.b.cx"
+									[attr.cy]="item.connectors.b.cy"
+									[attr.r]="item.connectors.b.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.b,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.b)"
+									 />					
+				
+						<circle #connector
+									[attr.cx]="item.connectors.c.cx"
+									[attr.cy]="item.connectors.c.cy"
+									[attr.r]="item.connectors.c.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.c,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.c)"
+									 />					
+						<circle #connector
+									[attr.cx]="item.connectors.d.cx"
+									[attr.cy]="item.connectors.d.cy"
+									[attr.r]="item.connectors.d.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.d,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.d)"
+									 />					
+				
+								
+					</g>
+
+					<!-- ? Diamond Connectors -->
+					<g class="connector" *ngIf="item.type === 'decision_diamond'" [ngClass]="{selected: item.id === boardSelection.id || lineDrawing}" >
+						<circle #connector
+									[attr.cx]="item.connectors.a.cx"
+									[attr.cy]="item.connectors.a.cy"
+									[attr.r]="item.connectors.a.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.a,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.a)"
+									 />	
+						<circle #connector
+									[attr.cx]="item.connectors.b.cx"
+									[attr.cy]="item.connectors.b.cy"
+									[attr.r]="item.connectors.b.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.b,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.b)"
+									 />	
+						<circle #connector
+									[attr.cx]="item.connectors.c.cx"
+									[attr.cy]="item.connectors.c.cy"
+									[attr.r]="item.connectors.c.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.c,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.c)"
+									 />	
+						<circle #connector
+									[attr.cx]="item.connectors.d.cx"
+									[attr.cy]="item.connectors.d.cy"
+									[attr.r]="item.connectors.d.r"
+									[attr.fill]="item.connectors.fill"
+									[attr.stroke-width]=item.connectors.stroke_width
+									(mousedown)="startLineDraw(item,item.connectors.d,$event)"
+									(mouseup)="stopLineDraw(item,item.connectors.d)"
+									 />	
 					</g>
 
 
-					
-						<g class="border" [ngClass]="{selected: item.id === boardSelection.id}" >
-						<rect  class="rect" 
-									[attr.x]="item.selection.x"
-									[attr.y]="item.selection.y"
-									[attr.width]="item.selection.width"
-									[attr.height]="item.selection.height"
-									[attr.fill]="item.selection.fill"
-									[attr.fill-opacity]="item.selection.fill_opacity"
-									[attr.stroke]="item.selection.stroke"
-									[attr.stroke-opacity]="item.selection.stroke_opacity"
-									[attr.stroke-width]="item.selection.stroke_width"
-									stroke-dasharray="5,5"/>
-						
+					<!-- Selection Tools -->					
+					<g class="border" *ngIf="false" [ngClass]="{selected: item.id === boardSelection.id}" >
+							<rect  class="rect" 
+										[attr.x]="item.selection.x"
+										[attr.y]="item.selection.y"
+										[attr.width]="item.selection.width"
+										[attr.height]="item.selection.height"
+										[attr.fill]="item.selection.fill"
+										[attr.fill-opacity]="item.selection.fill_opacity"
+										[attr.stroke]="item.selection.stroke"
+										[attr.stroke-opacity]="item.selection.stroke_opacity"
+										[attr.stroke-width]="item.selection.stroke_width"
+										stroke-dasharray="5,5"/>
+							
 							<!-- Selection border circles -->
 							<circle #border_expander
 											class="border-nw-expander"
@@ -131,6 +270,8 @@
 											[attr.stroke-width]="item.stroke_width" />
 					</g>
 				</g>
+
+				
 			</svg>
 		</div>
 	</div>

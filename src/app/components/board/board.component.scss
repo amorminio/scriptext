@@ -19,11 +19,15 @@
 			// display: flex;
 			// justify-content: center;
 			// align-items: center;
-			border: 1px	solid	black;
-			border-radius: 5px;
-			background: #FCFCFC;
+			// border: 1px	solid	black;
+			// border-radius: 5px;
+			
 		
 			.svg-canvas{
+				border: 1px	solid	black;
+				background: #FCFCFC;
+				border-radius: 5px;
+
 				.shape{
 					&:hover{
 						cursor:move;
@@ -56,6 +60,16 @@
 		
 					.border{
 						opacity: 0;
+						&.selected{
+							opacity: 1;
+						}
+					}
+
+					.connector{
+						opacity: 0;
+						&:hover{
+							cursor: pointer;
+						}
 						&.selected{
 							opacity: 1;
 						}

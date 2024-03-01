@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardService } from '../../services/board.service';
 import { SHAPES } from '../../shared/shapes';
@@ -11,36 +11,35 @@ import { ShapeSelectorComponent } from '../menu/shape-selector.component';
 	templateUrl: './board.component.html',
 	styleUrl: './board.component.scss'
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit,AfterViewInit {
 
 	@ViewChild('board_element', { static: true }) board!: ElementRef;
 	@ViewChildren('border_expander') borderExpander!: QueryList<ElementRef>;
 
 	// Board
-	boardHeight: number = 500
-	boardWidth: number = 500
+	boardHeight: number = 200
+	viewBox: string  = '0 0 1000 1000'
 	
 	shapes: Array<any> = []
 	lines: Array<any> = []
 
 	menuSelection: any
-	boardSelection: any
+	boardHover: any
 	dragSelection: any
 	
 	// Line Drawing
 	lineDrawing:boolean = false
-	
 	startConnector:any 
 	endShape:any 
 	endConnector:any 
 
+	// Active line draw
 	new_line:any={x1:0,	y1:0,	x2:0,	y2:0,	stroke:'black'}
-	
-	
 
 	constructor(private _board: BoardService) {
 
 	}
+	
 
 
 	ngOnInit() {
@@ -82,7 +81,7 @@ export class BoardComponent implements OnInit {
 		})
 
 		this._board.boardSelection$.subscribe((selected) => {
-			this.boardSelection = selected
+			this.boardHover = selected
 		})
 
 		this._board.shapes$.subscribe((selected) => {
@@ -90,11 +89,27 @@ export class BoardComponent implements OnInit {
 		})
 	}
 
+	ngAfterViewInit(): void {
+		debugger
+		
+		let w = this.board.nativeElement.clientWidth
+		let h = this.board.nativeElement.clientHeight
+
+		this.viewBox = `0 0 ${w} ${h}`
+		 
+
+			
+			
+			
+			
+	}
+
 	startDrag(event:MouseEvent,shape:any){
 		this.dragSelection = shape
 	}
 
 	drag(event:MouseEvent){
+
 		if(this.dragSelection && !this.lineDrawing){
 			event.preventDefault()
 			if(this.dragSelection.type === 'rect'){
@@ -131,7 +146,7 @@ export class BoardComponent implements OnInit {
 				this.dragSelection.connectors.d.cy = event.offsetY 
 			}
 
-			else if(this.boardSelection.type === 'decision_diamond'){
+			else if(this.boardHover.type === 'decision_diamond'){
 				this.dragSelection.x = event.offsetX 
 				this.dragSelection.y = event.offsetY
 				this.dragSelection.selection.x = event.offsetX - this.dragSelection.radius -10
@@ -272,7 +287,7 @@ export class BoardComponent implements OnInit {
 		}
 
 		let connectors = {
-			fill:SHAPES.circle.fill,
+			fill:SHAPES.connector.fill,
 			stroke_width:SHAPES.circle.stroke_width,
 			a:{
 					cx:event.offsetX,
@@ -397,9 +412,16 @@ export class BoardComponent implements OnInit {
 
 	}
 
+	selectHoverShape(shape: any) {
+		if(!this.dragSelection){
+			this._board.boardHoverShape = shape
+		}
+	}
+
 	selectShape(shape: any) {
-		if(!this.dragSelection)
-		this._board.boardItem = shape
+		if(!this.dragSelection){
+			this._board.boardHoverShape = shape
+		}
 	}
 
 	startLineDraw(sourceShape:any,connector:any,event:MouseEvent){
@@ -419,6 +441,7 @@ export class BoardComponent implements OnInit {
 			let line = {
 				startConnector: this.startConnector,
 				endConnector:connector,
+				stroke:SHAPES.line.stroke
 			}
 
 			this.lines.push(line)

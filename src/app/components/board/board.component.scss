@@ -1,83 +1,80 @@
-.wrapper{
-	display: flex;
-	flex-direction: row;
-	height: 100%;
+.board-wrapper{
 
+	display: flex;
+	height: 100%;
+		
 	.menu{
 		width: 20%;
 		max-width: 20%;
-		padding: 10px;
 	}
 		
 	.board{
-		margin: 5px;
-		display: flex;
-		flex-direction: row;
 		width: 100%;
-		
-		.canvas{
-			// display: flex;
-			// justify-content: center;
-			// align-items: center;
-			// border: 1px	solid	black;
-			// border-radius: 5px;
-			
-		
-			.svg-canvas{
-				border: 1px	solid	black;
-				background: #FCFCFC;
-				border-radius: 5px;
+		padding: 5px;
 
-				.shape{
-					&:hover{
-						cursor:move;
-					}
-		
-					.border-nw-expander:hover{
-						cursor: nw-resize;
-					}
-					.border-n-expander:hover{
-						cursor: n-resize;
-					}
-					.border-ne-expander:hover{
-						cursor: ne-resize;
-					}
-					.border-w-expander:hover{
-						cursor: w-resize;
-					}
-					.border-e-expander:hover{
-						cursor: e-resize;
-					}
-					.border-sw-expander:hover{
-						cursor: sw-resize;
-					}
-					.border-s-expander:hover{
-						cursor: s-resize;
-					}
-					.border-se-expander:hover{
-						cursor: se-resize;
-					}
-		
-					.border{
-						opacity: 0;
-						&.selected{
-							opacity: 1;
-						}
-					}
+		.svg-canvas{
 
-					.connector{
-						opacity: 0;
-						&:hover{
-							cursor: pointer;
-						}
-						&.selected{
-							opacity: 1;
-						}
-					}
-		
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			border: 1px	solid	black;
+			background: #FCFCFC;
+			border-radius: 5px;
+			width: calc(100%);
+			height: calc(100%);
+			// width: calc(99%);
+			// height: calc(99%);
+
+			.shape{
+				&:hover{
+					cursor:move;
 				}
+	
+				.border-nw-expander:hover{
+					cursor: nw-resize;
+				}
+				.border-n-expander:hover{
+					cursor: n-resize;
+				}
+				.border-ne-expander:hover{
+					cursor: ne-resize;
+				}
+				.border-w-expander:hover{
+					cursor: w-resize;
+				}
+				.border-e-expander:hover{
+					cursor: e-resize;
+				}
+				.border-sw-expander:hover{
+					cursor: sw-resize;
+				}
+				.border-s-expander:hover{
+					cursor: s-resize;
+				}
+				.border-se-expander:hover{
+					cursor: se-resize;
+				}
+	
+				.border{
+					opacity: 0;
+					&.selected{
+						opacity: 1;
+					}
+				}
+
+				.connector{
+					opacity: 0;
+					&:hover{
+						cursor: pointer;
+					}
+					&.selected{
+						opacity: 1;
+					}
+				}
+	
 			}
 		}
+		
 	}
 
 }

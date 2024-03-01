@@ -9,8 +9,8 @@ export class BoardService {
 	private menuSelection = new BehaviorSubject<any>('');
 	public menuSelection$ = this.menuSelection.asObservable()
 	
-	private boardSelection = new BehaviorSubject<any>('');
-	public boardSelection$ = this.boardSelection.asObservable()
+	private boardHover = new BehaviorSubject<any>('');
+	public boardSelection$ = this.boardHover.asObservable()
 	
 	private shapes = new BehaviorSubject<any>([]);
 	public shapes$ = this.shapes.asObservable()
@@ -53,8 +53,8 @@ export class BoardService {
 		this.menuSelection.next(shape)
 	}
 
-	set boardItem(shape:string){
-		this.boardSelection.next(shape)
+	set boardHoverShape(shape:string){
+		this.boardHover.next(shape)
 	}
 
 	

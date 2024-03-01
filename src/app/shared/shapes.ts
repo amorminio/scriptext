@@ -104,7 +104,12 @@ export const SHAPES = {
 
 	connector:{
 		radius:3,
-		fill:'#000'
+		fill:'#5EB1BF'
+	},
+
+	line:{
+		fill:'#5EB1BF',
+		stroke:'#000'
 	}
 
 
